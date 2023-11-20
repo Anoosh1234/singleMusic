@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/39eba3e6fd.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+
+    <div class="container">
+    <div class="overlay">
+        <div class="music-player">
+            <nav>
+           <div class="circle">
+            <i class="fa-solid fa-angle-left"></i>
+           </div>
+           <div class="circle">
+            <i class="fa-solid fa-bars"></i>
+           </div>
+            </nav>
+
+            <img src="media/Screenshot 2023-11-20 163643.png" class="song-img">
+            <h1>Kiliye Kiliye</h1>
+            <p>Guts-come Closer</p>
+
+            <audio controls id="song">
+                <source src="media/ytmp3free.cc_kiliye-kiliye-guts-come-closer-dj-sekhar-s-janaki-full-version-youtubemp3free.org.mp3" type="audio/mpeg">
+            </audio>
+            <input type="range" value="0" id="progress">
+
+            <div class="controls">
+                
+                    <div><i class="fa-solid fa-backward"></i></div>
+                    <div onclick="playPause()"><i class="fa-solid fa-play" id="ctrlIcon"></i></div>
+                    <div><i class="fa-solid fa-forward"></i></div>
+                
+            </div>
+        </div>
+    </div>
+    </div>
+    <script>
+      
+    let progress = document.getElementById("progress");
+    let song = document.getElementById("song");
+    let ctrlIcon = document.getElementById("ctrlIcon");
+    let songIndex = 0; // Keep track of the current song index
+    let songImg = document.querySelector(".song-img"); // Corrected class name
+
+
+    // Array of song sources
+    let songs = [
+        "media/ytmp3free.cc_kiliye-kiliye-guts-come-closer-dj-sekhar-s-janaki-full-version-youtubemp3free.org.mp3",
+        "media/ytmp3free.cc_kiliye-kiliye-guts-come-closer-dj-sekhar-s-janaki-full-version-youtubemp3free.org.mp3"
+    ];
+
+    song.onloadedmetadata = function () {
+        progress.max = song.duration;
+        progress.value = song.currentTime;
+    }
+
+    function playPause() {
+        if (ctrlIcon.classList.contains("fa-pause")) {
+            song.pause();
+            ctrlIcon.classList.remove("fa-pause");
+            ctrlIcon.classList.add("fa-play");
+        } else {
+            song.play();
+            ctrlIcon.classList.add("fa-pause");
+            ctrlIcon.classList.remove("fa-play");
+        }
+    }
+
+    function changeSong(direction) {
+        // Update the song index based on the direction
+        if (direction === 'forward') {
+            songIndex = (songIndex + 1) % songs.length;
+        } else if (direction === 'backward') {
+            songIndex = (songIndex - 1 + songs.length) % songs.length;
+        }
+
+        // Change the source of the audio element to the new song
+        song.src = songs[songIndex];
+        song.load(); // Load the new song
+        song.play(); // Start playing the new song
+        ctrlIcon.classList.add("fa-pause");
+        ctrlIcon.classList.remove("fa-play");
+    }
+
+    setInterval(() => {
+        progress.value = song.currentTime;
+    }, 500);
+
+    progress.onchange = function () {
+        song.currentTime = progress.value;
+        playPause(); // Toggle play/pause icon based on the progress change
+    }
+
+
+    </script>
+</body>
+</html>
